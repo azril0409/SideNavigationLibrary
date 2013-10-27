@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 public  class SideNavigationPage {
-	static String Translate = "Translate";
+	static String SCROLL_TYPE = "scrolltype";
 	private static SideNavigationPage sideNavigationPage;
 	public static final int Top = 0;
 	public static final int Left = 1;
 	public static final int Bottom = 2;
 	public static final int Right = 3;
-	private int translate = Left;
+	private int scrolltype = Left;
 	private Context context;
 	private View view;
 	private SideNavigationActivity activity;
@@ -34,8 +34,8 @@ public  class SideNavigationPage {
 		this.activity = activity;
 	}
 	
-	public void setTranslate(int translate){
-		this.translate = translate;
+	public void setScrolltype(int scrolltype){
+		this.scrolltype = scrolltype;
 	}
 	
 	public View createView(int layoutRid){
@@ -51,7 +51,7 @@ public  class SideNavigationPage {
 				return;
 			}
 			Intent intent = new Intent();
-			intent.putExtra(Translate, translate);
+			intent.putExtra(SCROLL_TYPE, scrolltype);
 			intent.setClass(context, SideNavigationActivity.class);
 			context.startActivity(intent);			
 		}

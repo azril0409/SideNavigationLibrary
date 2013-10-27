@@ -1,6 +1,6 @@
 package com.neetoffice.framework.sidenavigation;
 
-import com.neetoffice.framework.sidenavigation.ViewFlow.ViewSwitchListener;
+import com.neetoffice.framework.sidenavigation.FlowView.ViewSwitchListener;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,27 +9,26 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
-import android.widget.Toast;
 
 public class SideNavigationActivity extends Activity implements AnimationListener,ViewSwitchListener{
-	private ViewFlow view;
+	private FlowView view;
 	private int translate;
 	private SideNavigationPage sideNavigationPage;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(android.R.style.Theme_Translucent_NoTitleBar);
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);		
+		translate = getIntent().getIntExtra(SideNavigationPage.SCROLL_TYPE, SideNavigationPage.Left);
 
 		sideNavigationPage = SideNavigationPage.getEntity(this);
 		sideNavigationPage.onCreate(this);
 		
 		SideNavigationAdapter adapter = new SideNavigationAdapter(this);
-		view = new ViewFlow(this);
+		view = new FlowView(this,translate);
 		view.setAdapter(adapter);
 		view.setOnViewSwitchListener(this);
 		
-		translate = getIntent().getIntExtra(SideNavigationPage.Translate, SideNavigationPage.Left);
 		setContentView(view);
 		TranslateAnimation animShow = null;
 		switch(translate){
@@ -70,7 +69,6 @@ public class SideNavigationActivity extends Activity implements AnimationListene
 
 	@Override
 	public void onBackPressed() {
-		Log.d("SideNavigation", "onBackPressed");
 		TranslateAnimation animShow = null;
 		switch(translate){
 		case SideNavigationPage.Top:
@@ -130,7 +128,6 @@ public class SideNavigationActivity extends Activity implements AnimationListene
 	public void onSwitched(View view, int position) {
 		if(position == 1){
 			finish();
-		}
-		
+		}		
 	}	
 }
