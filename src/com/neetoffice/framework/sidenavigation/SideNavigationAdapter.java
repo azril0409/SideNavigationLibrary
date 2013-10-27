@@ -46,4 +46,7 @@ public class SideNavigationAdapter extends BaseAdapter {
 			super.unregisterDataSetObserver(observer);  
 	    } 
 	}
+	
+	
+
 }
