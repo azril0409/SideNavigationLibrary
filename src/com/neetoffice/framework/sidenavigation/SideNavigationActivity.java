@@ -1,7 +1,5 @@
 package com.neetoffice.framework.sidenavigation;
 
-import com.neetoffice.framework.sidenavigation.ViewFlow.ViewSwitchListener;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,10 +7,11 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
-import android.widget.Toast;
+
+import com.neetoffice.framework.sidenavigation.FlowView.ViewSwitchListener;
 
 public class SideNavigationActivity extends Activity implements AnimationListener,ViewSwitchListener{
-	private ViewFlow view;
+	private FlowView view;
 	private int translate;
 	private SideNavigationPage sideNavigationPage;
 	
@@ -20,16 +19,16 @@ public class SideNavigationActivity extends Activity implements AnimationListene
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(android.R.style.Theme_Translucent_NoTitleBar);
 		super.onCreate(savedInstanceState);
+		translate = getIntent().getIntExtra(SideNavigationPage.Translate, SideNavigationPage.Left);
 
 		sideNavigationPage = SideNavigationPage.getEntity(this);
 		sideNavigationPage.onCreate(this);
 		
 		SideNavigationAdapter adapter = new SideNavigationAdapter(this);
-		view = new ViewFlow(this);
+		view = new FlowView(this,translate);
 		view.setAdapter(adapter);
 		view.setOnViewSwitchListener(this);
 		
-		translate = getIntent().getIntExtra(SideNavigationPage.Translate, SideNavigationPage.Left);
 		setContentView(view);
 		TranslateAnimation animShow = null;
 		switch(translate){
