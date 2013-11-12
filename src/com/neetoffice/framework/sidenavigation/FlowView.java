@@ -69,7 +69,7 @@ public class FlowView extends AdapterView<Adapter> implements OnGestureListener 
 		final ViewConfiguration configuration = ViewConfiguration.get(getContext());
 		touchSlop = configuration.getScaledTouchSlop();
 		maximumVelocity = configuration.getScaledMaximumFlingVelocity();
-		gestureDetector = new GestureDetector(this);
+		gestureDetector = new GestureDetector(getContext(),this);
 	}
 
 	@Override
@@ -195,26 +195,38 @@ public class FlowView extends AdapterView<Adapter> implements OnGestureListener 
 	public void setSelection(int position) {
 		selectionPosition = position;
 	}
-	
 	@Override
-	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		final int action = ev.getAction();
-
+	public boolean onInterceptTouchEvent(MotionEvent event) {
+		if (getChildCount() == 0)
+			return false;
+		final int action = event.getAction();
+		final float x = event.getX();
+		final float y = event.getY();
+		
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
-			Log.d(TAG, "MotionEvent ACTION DOWN");
+			lastMotionX = x;
+			lastMotionY = y;
 			break;
 		case MotionEvent.ACTION_MOVE:
-			Log.d(TAG, "MotionEvent ACTION MOVE");
-			break;
+			final int deltaX = (int) Math.abs((lastMotionX - x));
+			final int deltaY = (int) Math.abs((lastMotionY - y));
+			Log.d(TAG, "deltaX : " + deltaX);
+			Log.d(TAG, "deltaY : " + deltaY);
+			switch(translate){
+			case Up:
+			case Down:
+				return deltaY > deltaX ?true:false;
+			case Left:
+			case Right:
+				return deltaX > deltaY ?true:false;
+			}
 		case MotionEvent.ACTION_UP:
-			Log.d(TAG, "MotionEvent ACTION UP");
 			break;
 		case MotionEvent.ACTION_CANCEL:
-			Log.d(TAG, "MotionEvent ACTION CANCEL");
 			break;
 		}
-		return true;
+		return false;
 	}
 	@SuppressLint("Recycle")
 	@Override
@@ -342,7 +354,6 @@ public class FlowView extends AdapterView<Adapter> implements OnGestureListener 
 			break;
 		}
 		return gestureDetector.onTouchEvent(event);
-		
 	}
 
 	private void snapToDestination() {
@@ -382,9 +393,11 @@ public class FlowView extends AdapterView<Adapter> implements OnGestureListener 
 			scroller.startScroll(getScrollX(), 0, deltaX, 0, Math.abs(deltaX) * 2);
 			break;
 		}
-		
-		View child = getChildAt(whichScreen);
-		viewSwitchListener.onSwitched(child, whichScreen);
+
+		if(viewSwitchListener !=null){
+			View child = getChildAt(whichScreen);
+			viewSwitchListener.onSwitched(child, whichScreen);
+		}
 		invalidate();
 	}	
 	
