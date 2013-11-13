@@ -162,7 +162,7 @@ public class FlowView extends AdapterView<Adapter> implements OnGestureListener 
 			for (int index = 0; index < count; index++) {
 				View child = adapter.getView(index, convertView, FlowView.this);
 				if (child.getTag() != null) {
-					convertView = child;
+					convertView = child.findFocus();
 				}
 				LayoutParams params = child.getLayoutParams();
 				if (params == null) {
@@ -177,7 +177,7 @@ public class FlowView extends AdapterView<Adapter> implements OnGestureListener 
 			for (int index = 0; index < count; index++) {
 				View child = adapter.getView(count-index-1, convertView, FlowView.this);
 				if (child.getTag() != null) {
-					convertView = child;
+					convertView = child.findFocus();
 				}
 				LayoutParams params = child.getLayoutParams();
 				if (params == null) {
